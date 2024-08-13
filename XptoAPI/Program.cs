@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using XptoAPI.Context;
+using XptoAPI.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +9,9 @@ var connectionString = builder.Configuration.GetConnectionString("DevConnection"
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
-});
+}); 
+
+builder.Services.AddScoped<IServiceOrderRepository, ServiceOrderRepository>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

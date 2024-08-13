@@ -15,13 +15,13 @@ namespace XptoAPI.Repositories
 
         public async Task<IEnumerable<ServiceOrder>> GetAllServiceOrderAsync()
         {
-            IEnumerable<ServiceOrder> serviceOrders = await _context.serviceOrders.ToListAsync();
+            IEnumerable<ServiceOrder> serviceOrders = await _context.serviceOrders.Include(so => so.Client).Include(so => so.ServiceExecuter).ToListAsync();
             return serviceOrders;
         }
 
         public async Task<ServiceOrder> GetServiceOrderByIdAsync(Guid id)
         {
-            ServiceOrder? serviceOrder = await _context.serviceOrders.FirstOrDefaultAsync(so => so.Id == id);
+            ServiceOrder? serviceOrder = await _context.serviceOrders.Include(so => so.Client).Include(so => so.ServiceExecuter).FirstOrDefaultAsync(so => so.Id == id);
             return serviceOrder;
         }
 
