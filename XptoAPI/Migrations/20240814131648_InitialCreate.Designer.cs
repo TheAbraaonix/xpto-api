@@ -12,8 +12,8 @@ using XptoAPI.Context;
 namespace XptoAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240813173459_FirstMigration")]
-    partial class FirstMigration
+    [Migration("20240814131648_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -74,6 +74,9 @@ namespace XptoAPI.Migrations
                     b.Property<Guid>("ServiceExecuterId")
                         .HasColumnType("char(36)");
 
+                    b.Property<int>("ServiceNumber")
+                        .HasColumnType("int");
+
                     b.Property<string>("ServiceTitle")
                         .HasColumnType("longtext");
 
@@ -82,11 +85,9 @@ namespace XptoAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientId")
-                        .IsUnique();
+                    b.HasIndex("ClientId");
 
-                    b.HasIndex("ServiceExecuterId")
-                        .IsUnique();
+                    b.HasIndex("ServiceExecuterId");
 
                     b.ToTable("serviceOrders");
                 });
@@ -94,14 +95,14 @@ namespace XptoAPI.Migrations
             modelBuilder.Entity("XptoAPI.Models.ServiceOrder", b =>
                 {
                     b.HasOne("XptoAPI.Models.Client", "Client")
-                        .WithOne("ServiceOrder")
-                        .HasForeignKey("XptoAPI.Models.ServiceOrder", "ClientId")
+                        .WithMany("ServiceOrders")
+                        .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("XptoAPI.Models.ServiceExecuter", "ServiceExecuter")
-                        .WithOne("ServiceOrder")
-                        .HasForeignKey("XptoAPI.Models.ServiceOrder", "ServiceExecuterId")
+                        .WithMany("ServiceOrders")
+                        .HasForeignKey("ServiceExecuterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -112,12 +113,12 @@ namespace XptoAPI.Migrations
 
             modelBuilder.Entity("XptoAPI.Models.Client", b =>
                 {
-                    b.Navigation("ServiceOrder");
+                    b.Navigation("ServiceOrders");
                 });
 
             modelBuilder.Entity("XptoAPI.Models.ServiceExecuter", b =>
                 {
-                    b.Navigation("ServiceOrder");
+                    b.Navigation("ServiceOrders");
                 });
 #pragma warning restore 612, 618
         }

@@ -71,6 +71,9 @@ namespace XptoAPI.Migrations
                     b.Property<Guid>("ServiceExecuterId")
                         .HasColumnType("char(36)");
 
+                    b.Property<int>("ServiceNumber")
+                        .HasColumnType("int");
+
                     b.Property<string>("ServiceTitle")
                         .HasColumnType("longtext");
 

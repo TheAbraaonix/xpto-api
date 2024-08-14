@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace XptoAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstMigration : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -51,6 +51,7 @@ namespace XptoAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    ServiceNumber = table.Column<int>(type: "int", nullable: false),
                     ServiceTitle = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     ServiceDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
@@ -79,14 +80,12 @@ namespace XptoAPI.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_serviceOrders_ClientId",
                 table: "serviceOrders",
-                column: "ClientId",
-                unique: true);
+                column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_serviceOrders_ServiceExecuterId",
                 table: "serviceOrders",
-                column: "ServiceExecuterId",
-                unique: true);
+                column: "ServiceExecuterId");
         }
 
         /// <inheritdoc />
