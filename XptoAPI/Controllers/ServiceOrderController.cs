@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using XptoAPI.Models;
 using XptoAPI.Repositories;
+using XptoAPI.Services;
 
 namespace XptoAPI.Controllers
 {
@@ -8,27 +9,27 @@ namespace XptoAPI.Controllers
     [ApiController]
     public class ServiceOrderController : ControllerBase
     {
-        private readonly IServiceOrderRepository _repository;
+        private readonly IServiceOrderService _service;
 
-        public ServiceOrderController(IServiceOrderRepository repository)
+        public ServiceOrderController(IServiceOrderService service)
         {
-            _repository = repository;
+            _service = service;
         }
 
         [HttpGet]
         [Route("GetAllServiceOrder")]
         public async Task<IActionResult> GetAllServiceOrder()
         {
-            return Ok(await _repository.GetAllServiceOrderAsync());
+            return Ok(await _service.GetAllServiceOrders());
         }
 
         [HttpGet]
         [Route("GetServiceOrderById/{id}")]
         public async Task<IActionResult> GetServiceOrderById(Guid id)
         {
-            ServiceOrder serviceOrder = await _repository.GetServiceOrderByIdAsync(id);
+            ServiceOrder serviceOrder = await _service.GetServiceOrderById(id);
 
-            if (serviceOrder == null) return NotFound();
+            if (serviceOrder == null) return NotFound($"The service order with id {id} does not exist.");
 
             return Ok(serviceOrder);
         }
@@ -37,7 +38,7 @@ namespace XptoAPI.Controllers
         [Route("CreateServiceOrder")]
         public async Task<IActionResult> CreateServiceOrder(ServiceOrder serviceOrder)
         {
-            ServiceOrder createdServiceOrder = await _repository.CreateServiceOrderAsync(serviceOrder);
+            ServiceOrder createdServiceOrder = await _service.CreateServiceOrder(serviceOrder);
 
             if (serviceOrder == null) return BadRequest();
 
@@ -45,24 +46,24 @@ namespace XptoAPI.Controllers
         }
 
         [HttpPut]
-        [Route("UpdateServiceOrder")]
-        public async Task<IActionResult> UpdateServiceOrder(ServiceOrder serviceOrder)
+        [Route("UpdateServiceOrder/{id}")]
+        public async Task<IActionResult> UpdateServiceOrder(Guid id, ServiceOrder serviceOrder)
         {
-            ServiceOrder updatedServiceOrder = await _repository.UpdateServiceOrderAsync(serviceOrder);
+            ServiceOrder updatedServiceOrder = await _service.UpdateServiceOrder(id, serviceOrder);
 
-            if (serviceOrder == null) return BadRequest();
+            if (updatedServiceOrder == null) return BadRequest($"The service order with id {id} does not exist.");
 
             return Ok(updatedServiceOrder);
         }
 
         [HttpDelete]
-        [Route("DeleteServiceOrder")]
-        public async Task<IActionResult> DeleteServiceOrder(ServiceOrder serviceOrder)
+        [Route("DeleteServiceOrder/{id}")]
+        public async Task<IActionResult> DeleteServiceOrder(Guid id)
         {
 
-           ServiceOrder deletedServiceOrder = await _repository.DeleteServiceOrderAsync(serviceOrder);
+           ServiceOrder deletedServiceOrder = await _service.DeleteServiceOrder(id);
 
-            if (serviceOrder == null) return BadRequest();
+            if (deletedServiceOrder == null) return BadRequest($"The service order with id {id} does not exist.");
 
             return NoContent();
         }

@@ -32,9 +32,11 @@ namespace XptoAPI.Repositories
             return orderService;
         }
 
-        public async Task<ServiceOrder> UpdateServiceOrderAsync(ServiceOrder orderService)
+        public async Task<ServiceOrder> UpdateServiceOrderAsync(Guid id, ServiceOrder orderService)
         {
-            _context.Set<ServiceOrder>().Update(orderService);
+            ServiceOrder foundServiceOrder = await GetServiceOrderByIdAsync(id);
+            orderService.Id = foundServiceOrder.Id;
+            _context.Entry(foundServiceOrder).CurrentValues.SetValues(orderService);
             await _context.SaveChangesAsync();
             return orderService;
         }

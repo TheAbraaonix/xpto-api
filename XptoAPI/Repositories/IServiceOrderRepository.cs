@@ -7,7 +7,7 @@ namespace XptoAPI.Repositories
         Task<IEnumerable<ServiceOrder>> GetAllServiceOrderAsync();
         Task<ServiceOrder> GetServiceOrderByIdAsync(Guid id);
         Task<ServiceOrder> CreateServiceOrderAsync(ServiceOrder orderService);
-        Task<ServiceOrder> UpdateServiceOrderAsync(ServiceOrder orderService);
+        Task<ServiceOrder> UpdateServiceOrderAsync(Guid id, ServiceOrder orderService);
         Task<ServiceOrder> DeleteServiceOrderAsync(ServiceOrder orderService);
     }
 }
