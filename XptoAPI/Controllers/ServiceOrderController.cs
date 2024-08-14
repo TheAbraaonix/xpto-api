@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using XptoAPI.DTOs;
 using XptoAPI.Models;
-using XptoAPI.Repositories;
 using XptoAPI.Services;
 
 namespace XptoAPI.Controllers
@@ -27,29 +27,29 @@ namespace XptoAPI.Controllers
         [Route("GetServiceOrderById/{id}")]
         public async Task<IActionResult> GetServiceOrderById(Guid id)
         {
-            ServiceOrder serviceOrder = await _service.GetServiceOrderById(id);
+            ServiceOrderViewModel serviceOrderViewModel = await _service.GetServiceOrderById(id);
 
-            if (serviceOrder == null) return NotFound($"The service order with id {id} does not exist.");
+            if (serviceOrderViewModel == null) return NotFound($"The service order with id {id} does not exist.");
 
-            return Ok(serviceOrder);
+            return Ok(serviceOrderViewModel);
         }
 
         [HttpPost]
         [Route("CreateServiceOrder")]
-        public async Task<IActionResult> CreateServiceOrder(ServiceOrder serviceOrder)
+        public async Task<IActionResult> CreateServiceOrder(ServiceOrderInputModel input)
         {
-            ServiceOrder createdServiceOrder = await _service.CreateServiceOrder(serviceOrder);
+            ServiceOrderViewModel createdServiceOrder = await _service.CreateServiceOrder(input);
 
-            if (serviceOrder == null) return BadRequest();
+            if (createdServiceOrder == null) return BadRequest();
 
             return CreatedAtAction(nameof(CreateServiceOrder), new ServiceOrder { Id = createdServiceOrder.Id}, createdServiceOrder);
         }
 
         [HttpPut]
         [Route("UpdateServiceOrder/{id}")]
-        public async Task<IActionResult> UpdateServiceOrder(Guid id, ServiceOrder serviceOrder)
+        public async Task<IActionResult> UpdateServiceOrder(Guid id, ServiceOrderUpdateInputModel input)
         {
-            ServiceOrder updatedServiceOrder = await _service.UpdateServiceOrder(id, serviceOrder);
+            ServiceOrderViewModel updatedServiceOrder = await _service.UpdateServiceOrder(id, input);
 
             if (updatedServiceOrder == null) return BadRequest($"The service order with id {id} does not exist.");
 
@@ -61,7 +61,7 @@ namespace XptoAPI.Controllers
         public async Task<IActionResult> DeleteServiceOrder(Guid id)
         {
 
-           ServiceOrder deletedServiceOrder = await _service.DeleteServiceOrder(id);
+           ServiceOrderViewModel deletedServiceOrder = await _service.DeleteServiceOrder(id);
 
             if (deletedServiceOrder == null) return BadRequest($"The service order with id {id} does not exist.");
 

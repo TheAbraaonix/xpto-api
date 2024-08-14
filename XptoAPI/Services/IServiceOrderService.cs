@@ -1,13 +1,14 @@
-﻿using XptoAPI.Models;
+﻿using XptoAPI.DTOs;
+using XptoAPI.Models;
 
 namespace XptoAPI.Services
 {
     public interface IServiceOrderService
     {
-        Task<IEnumerable<ServiceOrder>> GetAllServiceOrders();
-        Task<ServiceOrder> GetServiceOrderById(Guid id);
-        Task<ServiceOrder> CreateServiceOrder(ServiceOrder orderService);
-        Task<ServiceOrder> UpdateServiceOrder(Guid id, ServiceOrder orderService);
-        Task<ServiceOrder> DeleteServiceOrder(Guid id);
+        Task<IEnumerable<ServiceOrderViewModel>> GetAllServiceOrders();
+        Task<ServiceOrderViewModel> GetServiceOrderById(Guid id);
+        Task<ServiceOrderViewModel> CreateServiceOrder(ServiceOrderInputModel input);
+        Task<ServiceOrderViewModel> UpdateServiceOrder(Guid id, ServiceOrderUpdateInputModel input);
+        Task<ServiceOrderViewModel> DeleteServiceOrder(Guid id);
     }
 }

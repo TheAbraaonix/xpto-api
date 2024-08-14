@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using XptoAPI.Context;
+using XptoAPI.Mappers;
 using XptoAPI.Repositories;
 using XptoAPI.Services;
 
@@ -14,6 +15,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<IServiceOrderRepository, ServiceOrderRepository>();
 builder.Services.AddScoped<IServiceOrderService, ServiceOrderService>();
+builder.Services.AddAutoMapper(typeof(ServiceOrderProfile));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
