@@ -11,7 +11,13 @@ var connectionString = builder.Configuration.GetConnectionString("DevConnection"
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
-}); 
+});
+
+builder.Services.AddCors(p => p.AddDefaultPolicy(x =>
+    x.AllowAnyHeader()
+    .AllowAnyMethod()
+    .WithOrigins(builder.Configuration.GetSection("AppSettings:OriginAllowed")?.Value)
+    .AllowCredentials()));
 
 builder.Services.AddScoped<IServiceOrderRepository, ServiceOrderRepository>();
 builder.Services.AddScoped<IServiceOrderService, ServiceOrderService>();
@@ -30,6 +36,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors(x => x.AllowAnyHeader()
+    .AllowAnyMethod()
+    .WithOrigins(builder.Configuration.GetSection("AppSettings:OriginAllowed")?.Value)
+    .AllowCredentials());
 
 app.UseHttpsRedirection();
 
