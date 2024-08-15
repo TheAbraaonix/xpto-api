@@ -2,7 +2,7 @@
 {
     public class ServiceExecuterInputModel
     {
-        public string? Cpf { get; set; }
+        public string? Cnpj { get; set; }
         public string? Name { get; set; }
     }
 }
