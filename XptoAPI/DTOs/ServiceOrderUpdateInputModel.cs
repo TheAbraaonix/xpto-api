@@ -6,7 +6,7 @@
         public string? ServiceTitle { get; set; }
         public DateTime ServiceDate { get; set; }
         public double ServiceValue { get; set; }
-        public Guid ClientId { get; set; }
-        public Guid ServiceExecuterId { get; set; }
+        public ClientViewModel Client { get; set; }
+        public ServiceExecuterViewModel ServiceExecuter { get; set; }
     }
 }

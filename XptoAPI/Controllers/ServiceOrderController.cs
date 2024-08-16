@@ -61,7 +61,7 @@ namespace XptoAPI.Controllers
         public async Task<IActionResult> DeleteServiceOrder(Guid id)
         {
 
-           ServiceOrderViewModel deletedServiceOrder = await _service.DeleteServiceOrder(id);
+            ServiceOrderViewModel deletedServiceOrder = await _service.DeleteServiceOrder(id);
 
             if (deletedServiceOrder == null) return BadRequest($"The service order with id {id} does not exist.");
 

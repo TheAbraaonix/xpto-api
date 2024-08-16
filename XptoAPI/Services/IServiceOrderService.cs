@@ -1,5 +1,4 @@
 ﻿using XptoAPI.DTOs;
-using XptoAPI.Models;
 
 namespace XptoAPI.Services
 {
