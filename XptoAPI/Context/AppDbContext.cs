@@ -7,7 +7,7 @@ namespace XptoAPI.Context
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        public DbSet<Client> Clients { get; set; }
+        public DbSet<Client> clients { get; set; }
         public DbSet<ServiceExecuter> serviceExecuters { get; set; }
         public DbSet<ServiceOrder> serviceOrders { get; set; }
 
@@ -16,12 +16,14 @@ namespace XptoAPI.Context
             modelBuilder.Entity<ServiceOrder>()
                 .HasOne(so => so.Client)
                 .WithMany(c => c.ServiceOrders)
-                .HasForeignKey(so => so.ClientId);
+                .HasForeignKey(so => so.ClientId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<ServiceOrder>()
                 .HasOne(so => so.ServiceExecuter)
                 .WithMany(se => se.ServiceOrders)
-                .HasForeignKey(so => so.ServiceExecuterId);
+                .HasForeignKey(so => so.ServiceExecuterId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

@@ -35,7 +35,7 @@ namespace XptoAPI.Repositories
         public async Task<ServiceOrder> UpdateServiceOrderAsync(Guid id, ServiceOrder orderService)
         {
             ServiceOrder foundServiceOrder = await GetServiceOrderByIdAsync(id);
-            Client? foundClient = await _context.Clients.FindAsync(orderService.Client.Id);
+            Client? foundClient = await _context.clients.FindAsync(orderService.Client.Id);
             ServiceExecuter? foundServiceExecuter = await _context.serviceExecuters.FindAsync(orderService.ServiceExecuter.Id);
 
             if (foundServiceOrder == null || foundClient == null || foundServiceExecuter == null) return null;
@@ -60,6 +60,8 @@ namespace XptoAPI.Repositories
         public async Task<ServiceOrder> DeleteServiceOrderAsync(ServiceOrder orderService)
         {
             _context.Remove(orderService);
+            _context.serviceExecuters.Remove(orderService.ServiceExecuter);
+            _context.clients.Remove(orderService.Client);
             await _context.SaveChangesAsync();
             return orderService;
         }
