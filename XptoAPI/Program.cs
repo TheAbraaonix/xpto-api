@@ -22,6 +22,7 @@ builder.Services.AddCors(p => p.AddDefaultPolicy(x =>
 builder.Services.AddScoped<IServiceOrderRepository, ServiceOrderRepository>();
 builder.Services.AddScoped<IServiceOrderService, ServiceOrderService>();
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
+builder.Services.AddScoped<IServiceExecuterRepository, ServiceExecuterRepository>();
 builder.Services.AddAutoMapper(typeof(ServiceOrderProfile));
 
 builder.Services.AddControllers();

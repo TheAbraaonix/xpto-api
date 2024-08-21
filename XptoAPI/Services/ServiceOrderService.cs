@@ -10,12 +10,14 @@ namespace XptoAPI.Services
     {
         private readonly IServiceOrderRepository _repository;
         private readonly IClientRepository _clientRepository;
+        private readonly IServiceExecuterRepository _serviceExecuterRepository;
         private readonly IMapper _mapper;
 
-        public ServiceOrderService(IServiceOrderRepository repository, IClientRepository clientRepository, IMapper mapper)
+        public ServiceOrderService(IServiceOrderRepository repository, IClientRepository clientRepository, IServiceExecuterRepository serviceExecuterRepository, IMapper mapper)
         {
             _repository = repository;
             _clientRepository = clientRepository;
+            _serviceExecuterRepository = serviceExecuterRepository;
             _mapper = mapper;
         }
 
@@ -43,6 +45,11 @@ namespace XptoAPI.Services
             if (await ExistsClient(input.Client.Cpf))
             {
                 throw new RecordAlreadyExistsException("This CPF already exists in the database.");
+            }
+
+            if (await ExistsServiceExecuter(input.ServiceExecuter.Cnpj))
+            {
+                throw new RecordAlreadyExistsException("This CNPJ already exists in the database.");
             }
 
             ServiceOrder serviceOrder = _mapper.Map<ServiceOrder>(input);
@@ -78,6 +85,15 @@ namespace XptoAPI.Services
             Client client = await _clientRepository.GetClientByCpfAsync(cpf);
 
             if (client == null) return false;
+
+            return true;
+        }
+
+        public async Task<bool> ExistsServiceExecuter(string cnpj)
+        {
+            ServiceExecuter serviceExecuter = await _serviceExecuterRepository.GetServiceExecuterByCnpjAsync(cnpj);
+
+            if (serviceExecuter == null) return false;
 
             return true;
         }
