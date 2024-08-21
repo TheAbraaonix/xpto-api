@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using XptoAPI.DTOs;
+using XptoAPI.Exceptions;
 using XptoAPI.Models;
 using XptoAPI.Repositories;
 
@@ -8,11 +9,13 @@ namespace XptoAPI.Services
     public class ServiceOrderService : IServiceOrderService
     {
         private readonly IServiceOrderRepository _repository;
+        private readonly IClientRepository _clientRepository;
         private readonly IMapper _mapper;
 
-        public ServiceOrderService(IServiceOrderRepository repository, IMapper mapper)
+        public ServiceOrderService(IServiceOrderRepository repository, IClientRepository clientRepository, IMapper mapper)
         {
             _repository = repository;
+            _clientRepository = clientRepository;
             _mapper = mapper;
         }
 
@@ -36,6 +39,11 @@ namespace XptoAPI.Services
         public async Task<ServiceOrderViewModel> CreateServiceOrder(ServiceOrderInputModel input)
         {
             if (input == null) return null;
+            
+            if (await ExistsClient(input.Client.Cpf))
+            {
+                throw new RecordAlreadyExistsException("This CPF already exists in the database.");
+            }
 
             ServiceOrder serviceOrder = _mapper.Map<ServiceOrder>(input);
             await _repository.CreateServiceOrderAsync(serviceOrder);
@@ -63,6 +71,15 @@ namespace XptoAPI.Services
             ServiceOrder deletedServiceOrder = await _repository.DeleteServiceOrderAsync(foundServiceOrder);
             ServiceOrderViewModel deletedServiceOrderViewModel = _mapper.Map<ServiceOrderViewModel>(deletedServiceOrder);
             return deletedServiceOrderViewModel;
-        } 
+        }
+
+        public async Task<bool> ExistsClient(string cpf)
+        {
+            Client client = await _clientRepository.GetClientByCpfAsync(cpf);
+
+            if (client == null) return false;
+
+            return true;
+        }
     }
 }

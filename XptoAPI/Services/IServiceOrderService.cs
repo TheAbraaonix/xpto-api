@@ -9,5 +9,6 @@ namespace XptoAPI.Services
         Task<ServiceOrderViewModel> CreateServiceOrder(ServiceOrderInputModel input);
         Task<ServiceOrderViewModel> UpdateServiceOrder(Guid id, ServiceOrderUpdateInputModel input);
         Task<ServiceOrderViewModel> DeleteServiceOrder(Guid id);
+        Task<bool> ExistsClient(string cpf);
     }
 }

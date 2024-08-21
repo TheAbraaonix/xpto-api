@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using XptoAPI.DTOs;
+using XptoAPI.Exceptions;
 using XptoAPI.Models;
 using XptoAPI.Services;
 
@@ -38,17 +39,25 @@ namespace XptoAPI.Controllers
         [Route("CreateServiceOrder")]
         public async Task<IActionResult> CreateServiceOrder(ServiceOrderInputModel input)
         {
-            ServiceOrderViewModel createdServiceOrder = await _service.CreateServiceOrder(input);
+            try
+            {
+                ServiceOrderViewModel createdServiceOrder = await _service.CreateServiceOrder(input);
 
-            if (createdServiceOrder == null) return BadRequest();
+                if (createdServiceOrder == null) return BadRequest();
 
-            return CreatedAtAction(nameof(CreateServiceOrder), new ServiceOrder { Id = createdServiceOrder.Id}, createdServiceOrder);
+                return CreatedAtAction(nameof(CreateServiceOrder), new ServiceOrder { Id = createdServiceOrder.Id }, createdServiceOrder);
+            }
+            catch (RecordAlreadyExistsException ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut]
         [Route("UpdateServiceOrder/{id}")]
         public async Task<IActionResult> UpdateServiceOrder(Guid id, ServiceOrderUpdateInputModel input)
-        {
+        {   
             ServiceOrderViewModel updatedServiceOrder = await _service.UpdateServiceOrder(id, input);
 
             if (updatedServiceOrder == null) return BadRequest($"The service order with id {id} does not exist.");
