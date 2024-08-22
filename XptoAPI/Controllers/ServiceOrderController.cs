@@ -57,12 +57,20 @@ namespace XptoAPI.Controllers
         [HttpPut]
         [Route("UpdateServiceOrder/{id}")]
         public async Task<IActionResult> UpdateServiceOrder(Guid id, ServiceOrderUpdateInputModel input)
-        {   
-            ServiceOrderViewModel updatedServiceOrder = await _service.UpdateServiceOrder(id, input);
+        {
+            try
+            {
+                ServiceOrderViewModel updatedServiceOrder = await _service.UpdateServiceOrder(id, input);
 
-            if (updatedServiceOrder == null) return BadRequest($"The service order with id {id} does not exist.");
+                if (updatedServiceOrder == null) return BadRequest($"The service order with id {id} does not exist.");
 
-            return Ok(updatedServiceOrder);
+                return Ok(updatedServiceOrder);
+            }
+            catch (RecordAlreadyExistsException ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete]
