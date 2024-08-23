@@ -59,9 +59,24 @@ namespace XptoAPI.Services
 
         public async Task<ServiceOrderViewModel> UpdateServiceOrder(Guid id, ServiceOrderUpdateInputModel input)
         {
+            if (input == null) return null;
+            
             ServiceOrder? foundServiceOrder = await _repository.GetServiceOrderByIdAsync(id);
 
             if (foundServiceOrder == null) return null;
+
+            bool isCpfDifferent = foundServiceOrder.Client.Cpf != input.Client.Cpf;
+            bool isCnpjDifferent = foundServiceOrder.ServiceExecuter.Cnpj != input.ServiceExecuter.Cnpj;
+
+            if (isCpfDifferent && await ExistsClient(input.Client.Cpf))
+            {
+                throw new RecordAlreadyExistsException("This CPF already exists in the database.");
+            }
+
+            if (isCnpjDifferent && await ExistsServiceExecuter(input.ServiceExecuter.Cnpj))
+            {
+                throw new RecordAlreadyExistsException("This CNPJ already exists in the database.");
+            }
 
             ServiceOrder serviceOrder = _mapper.Map<ServiceOrder>(input);
             ServiceOrder updatedServiceOrder = await _repository.UpdateServiceOrderAsync(id, serviceOrder);
